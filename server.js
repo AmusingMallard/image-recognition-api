@@ -2,6 +2,19 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const bcrypt = require("bcrypt");
 const cors = require("cors");
+const knex = require("knex");
+
+const postgres = knex({
+  client: "pg",
+  connection: {
+    host: "127.0.0.1",
+    user: "postgres",
+    password: "sober-thud-reporter",
+    database: "imagerecognition",
+  },
+});
+
+console.log(postgres.select("*").from("users"));
 
 const saltRounds = 10;
 const app = express();
