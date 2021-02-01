@@ -26,7 +26,7 @@ if (process.env.NODE_ENV !== "production") {
   db = knex({
     client: "pg",
     connection: {
-      host: process.env.DATABASE_URL,
+      connectionString: process.env.DATABASE_URL,
       ssl: true,
     },
   });
