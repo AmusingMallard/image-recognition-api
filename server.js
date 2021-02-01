@@ -9,7 +9,7 @@ const profile = require("./controllers/profile");
 const register = require("./controllers/register");
 const signin = require("./controllers/signin");
 
-const db = knex({ client: "pg", connection: {} });
+let db = knex({ client: "pg", connection: {} });
 // Dev env
 if (process.env.NODE_ENV !== "production") {
   require("dotenv").config();
