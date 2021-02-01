@@ -14,10 +14,6 @@ const db = knex({
   },
 });
 
-db.select("*")
-  .from("users")
-  .then((data) => console.log(data));
-
 const saltRounds = 10;
 const app = express();
 
@@ -77,16 +73,19 @@ app.post("/register", (req, res) => {
 
 app.get("/profile/:id", (req, res) => {
   const { id } = req.params;
-  let found = false;
-  database.users.forEach((user) => {
-    if (user.id === id) {
-      found = true;
-      return res.json(user);
-    }
-  });
-  if (!found) {
-    res.status(400).json("not found");
-  }
+  db.select("*")
+    .from("users")
+    .where({ id })
+    .then((user) => {
+      if (user.length) {
+        res.json(user[0]);
+      } else {
+        throw new Error("Coud not find that user");
+      }
+    })
+    .catch((err) => {
+      res.status(404).json(err.message);
+    });
 });
 
 app.put("/image", (req, res) => {
