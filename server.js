@@ -9,10 +9,11 @@ const profile = require("./controllers/profile");
 const register = require("./controllers/register");
 const signin = require("./controllers/signin");
 
+const db = knex({});
 // Dev env
 if (process.env.NODE_ENV !== "production") {
   require("dotenv").config();
-  const db = knex({
+  db = knex({
     client: "pg",
     connection: {
       host: process.env.DB_HOST,
@@ -22,7 +23,7 @@ if (process.env.NODE_ENV !== "production") {
     },
   });
 } else {
-  const db = knex({
+  db = knex({
     client: "pg",
     connection: {
       host: process.env.DATABASE_URL,
