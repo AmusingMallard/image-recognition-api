@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const bcrypt = require("bcrypt");
 const cors = require("cors");
 const knex = require("knex");
+const { response } = require("express");
 
 const db = knex({
   client: "pg",
@@ -80,7 +81,7 @@ app.get("/profile/:id", (req, res) => {
       if (user.length) {
         res.json(user[0]);
       } else {
-        throw new Error("Coud not find that user");
+        throw new Error("Could not find that user");
       }
     })
     .catch((err) => {
@@ -90,17 +91,20 @@ app.get("/profile/:id", (req, res) => {
 
 app.put("/image", (req, res) => {
   const { id } = req.body;
-  let found = false;
-  database.users.forEach((user) => {
-    if (user.id === id) {
-      found = true;
-      user.entries++;
-      return res.json(user.entries);
-    }
-  });
-  if (!found) {
-    res.status(400).json("not found");
-  }
+  db("users")
+    .where({ id })
+    .increment("entries", 1)
+    .returning("entries")
+    .then((entries) => {
+      if (entries.length) {
+        res.json(entries[0]);
+      } else {
+        throw new Error("Unable to update entry count");
+      }
+    })
+    .catch((err) => {
+      res.status(404).json(err.message);
+    });
 });
 
 app.listen(3000, () => {
