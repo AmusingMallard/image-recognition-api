@@ -9,12 +9,17 @@ const profile = require("./controllers/profile");
 const register = require("./controllers/register");
 const signin = require("./controllers/signin");
 
+// Dev env
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config();
+}
+
 const db = knex({
   client: "pg",
   connection: {
-    host: "127.0.0.1",
-    user: "postgres",
-    password: "sober-thud-reporter",
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
     database: "imagerecognition",
   },
 });
@@ -34,6 +39,6 @@ app.get("/profile/:id", profile.handleProfileGet(db));
 app.put("/image", image.handleImage(db));
 app.post("/imageurl", image.handleApiCall());
 
-app.listen(3000, () => {
-  console.log("app is running on port 3000");
+app.listen(process.env.PORT || 3000, () => {
+  console.log("app is running");
 });
