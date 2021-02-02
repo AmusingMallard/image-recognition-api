@@ -9,7 +9,6 @@ const profile = require("./controllers/profile");
 const register = require("./controllers/register");
 const signin = require("./controllers/signin");
 
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
 let db = knex({ client: "pg", connection: {} });
 // Dev env
 if (process.env.NODE_ENV !== "production") {
@@ -28,7 +27,9 @@ if (process.env.NODE_ENV !== "production") {
     client: "pg",
     connection: {
       connectionString: process.env.DATABASE_URL,
-      ssl: true,
+      ssl: {
+        rejectUnauthorized: false,
+      },
     },
   });
 }
